@@ -1,0 +1,197 @@
+These are the api urls i got in the swagger and their respective outputs,
+
+Request URL
+https://localhost:7195/api/Product/GetAllProducts
+	
+Response body
+[
+  {
+    "productId": 1,
+    "name": "sofa1",
+    "description": "Wood Velvet 2 seater Sofa for Living Room",
+    "price": 15000,
+    "categoryId": 1,
+    "modelUrl": "https://shop3dprojectaccount.blob.core.windows.net/3d-models/Sofa1.glb",
+    "thumbnailUrl": "https://shop3dprojectaccount.blob.core.windows.net/images/Sofa1.png",
+    "quantity": 20
+  },
+  {
+    "productId": 2,
+    "name": "Table",
+    "description": "Cative Engineered Wood Office Table",
+    "price": 6000,
+    "categoryId": 2,
+    "modelUrl": "https://shop3dprojectaccount.blob.core.windows.net/3d-models/Table.glb",
+    "thumbnailUrl": "https://shop3dprojectaccount.blob.core.windows.net/images/Table.png",
+    "quantity": 35
+  },
+  {
+    "productId": 3,
+    "name": "Bed",
+    "description": "Platform Bed with Box Storage Engineered Wood",
+    "price": 20000,
+    "categoryId": 3,
+    "modelUrl": "https://shop3dprojectaccount.blob.core.windows.net/3d-models/Bed.glb",
+    "thumbnailUrl": "https://shop3dprojectaccount.blob.core.windows.net/images/Bed.png",
+    "quantity": 20
+  },
+  {
+    "productId": 4,
+    "name": "Chair",
+    "description": "Garden Rocking Chair Solid Wood 1 seater",
+    "price": 4500,
+    "categoryId": 4,
+    "modelUrl": "https://shop3dprojectaccount.blob.core.windows.net/3d-models/Chair.glb",
+    "thumbnailUrl": "https://shop3dprojectaccount.blob.core.windows.net/images/Chair.png",
+    "quantity": 50
+  },
+  {
+    "productId": 5,
+    "name": "Sofa2",
+    "description": "Tokyo Curved 5 Seater Sofa",
+    "price": 18000,
+    "categoryId": 1,
+    "modelUrl": "https://shop3dprojectaccount.blob.core.windows.net/3d-models/Sofa2.glb",
+    "thumbnailUrl": "https://shop3dprojectaccount.blob.core.windows.net/images/Sofa2.png",
+    "quantity": 10
+  }
+]
+
+
+Request URL
+https://localhost:7195/api/Product/GetProductById?id=1
+
+Response body
+{
+  "productId": 1,
+  "name": "sofa1",
+  "description": "Wood Velvet 2 seater Sofa for Living Room",
+  "price": 15000,
+  "categoryId": 1,
+  "modelUrl": "https://shop3dprojectaccount.blob.core.windows.net/3d-models/Sofa1.glb",
+  "thumbnailUrl": "https://shop3dprojectaccount.blob.core.windows.net/images/Sofa1.png",
+  "quantity": 20
+}
+
+
+Curl
+
+curl -X 'POST' \
+  'https://localhost:7195/api/Product/AddProduct' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "productId": 0,
+  "name": "string",
+  "description": "string",
+  "price": 0,
+  "categoryId": 0,
+  "modelUrl": "string",
+  "thumbnailUrl": "string",
+  "quantity": 0
+}'
+
+Request URL
+https://localhost:7195/api/Product/AddProduct
+
+Response body
+false
+
+
+curl -X 'PUT' \
+  'https://localhost:7195/api/Product/UpdateProduct' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "productId": 0,
+  "name": "string",
+  "description": "string",
+  "price": 0,
+  "categoryId": 0,
+  "modelUrl": "string",
+  "thumbnailUrl": "string",
+  "quantity": 0
+}'
+
+Request URL
+https://localhost:7195/api/Product/UpdateProduct
+
+Response body
+{
+  "success": false
+}
+
+
+curl -X 'DELETE' \
+  'https://localhost:7195/api/Product/DeleteProduct?id=3' \
+  -H 'accept: */*'
+
+Request URL
+https://localhost:7195/api/Product/DeleteProduct?id=3
+
+Response body
+{
+  "success": false
+}
+
+
+The above are asp.net core web api methods i thought can be useful and implemented. I ensure you that all are working well.
+Now I need to complete the front-end part of 3 user stories using angular. Those 3 user stories are adding the product, updating the product information and deleting the product.
+I need the scripts for the user stories front-end implementation.
+I need you to implement those user stories without using complicated tags.
+I want you to use the complex level upto the below codes::
+login-component.ts:
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent implements OnInit {
+  constructor() { }
+  submitLoginForm(form: NgForm) {
+    console.log(form.value.email);
+    console.log(form.value.password);
+  }
+  ngOnInit() {
+  }
+}
+login-component.html:
+<div class="container">
+  <form #loginForm="ngForm" (ngSubmit)="submitLoginForm(loginForm)" style="background-color:beige;">
+    <div class="row">
+      <div class="col-md-4">
+      </div>
+      <div class="col-md-4">
+        <h2>Login</h2>
+        <h6 style="text-align:right;color:dimgrey;font-size:small">All fields are mandatory</h6>
+        <div class="form-group">
+          <div class="col" style="text-align:left">
+            <label>Email Id</label>
+          </div>
+          <div class="col; input-group">
+            <input type="email" name="email" class="form-control" ngModel>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col" style="text-align:left">
+            <label>Password</label>
+          </div>
+          <div class="col; input-group">
+            <input type="password" name="password" class="form-control" ngModel>
+          </div>
+        </div>
+        <div class="form-group"  style="text-align:left">
+          <button type="submit" class="btn">Login</button>
+        </div>
+      </div>
+      <div class="col-md-4">
+      </div>
+    </div>
+  </form>
+</div>
+
+
+I am not saying to dont do anything other than this. But I want you to make it simple but the page to be interactive.
+Please help me complete the services and the components required for completing the mentioned user stories.
