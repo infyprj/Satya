@@ -1,0 +1,33 @@
+<div class="container" style="background-color:beige; padding: 20px;">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+      <h2 style="text-align:center">Delete Product</h2>
+      
+      <div class="form-group">
+        <label for="productSelect">Select Product to Delete</label>
+        <select id="productSelect" class="form-control" (change)="onProductSelect($event)">
+          <option value="">-- Select a product --</option>
+          <option *ngFor="let product of products" [value]="product.productId">{{product.name}} - {{product.description}}</option>
+        </select>
+      </div>
+
+      <div *ngIf="selectedProductId && !confirmDelete" class="mt-4">
+        <button class="btn btn-danger" (click)="toggleConfirmDelete()">Delete Selected Product</button>
+      </div>
+
+      <div *ngIf="confirmDelete" class="mt-4 p-3 border border-danger">
+        <p class="text-danger">Are you sure you want to delete this product? This action cannot be undone.</p>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-secondary" (click)="toggleConfirmDelete()">Cancel</button>
+          <button class="btn btn-danger" (click)="deleteProduct()">Confirm Delete</button>
+        </div>
+      </div>
+
+      <div *ngIf="showDiv" style="color:red;text-align:center; margin-top: 20px;">
+        {{status}}
+      </div>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+</div>
