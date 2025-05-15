@@ -1,0 +1,182 @@
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using YourNamespace.Models;
+using YourNamespace.Repository;
+
+namespace YourNamespace.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CartController : ControllerBase
+    {
+        private readonly IShop3DRepository repository;
+
+        public CartController(IShop3DRepository repository)
+        {
+            this.repository = repository;
+        }
+
+        [HttpPost("create")]
+        public IActionResult CreateCart(int userId)
+        {
+            try
+            {
+                int result = repository.CreateCart(userId);
+                if (result == -1)
+                {
+                    return Ok(new { success = false, message = "User already has a cart" });
+                }
+                else if (result > 0)
+                {
+                    return Ok(new { success = true, message = "Cart created successfully" });
+                }
+                else
+                {
+                    return StatusCode(500, new { success = false, message = "Failed to create cart" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("{userId}")]
+        public IActionResult GetCart(int userId)
+        {
+            try
+            {
+                Cart cart = repository.GetCartByUserId(userId);
+                if (cart != null)
+                {
+                    return Ok(cart);
+                }
+                else
+                {
+                    return NotFound(new { success = false, message = "Cart not found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddToCart([FromBody] CartAddRequest request)
+        {
+            try
+            {
+                int result = repository.AddToCart(request.UserId, request.ProductId, request.Quantity);
+                if (result == -1)
+                {
+                    return Ok(new { success = false, message = "Product already exists in cart" });
+                }
+                else if (result > 0)
+                {
+                    return Ok(new { success = true, message = "Product added to cart successfully" });
+                }
+                else
+                {
+                    return StatusCode(500, new { success = false, message = "Failed to add product to cart" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPut("update")]
+        public IActionResult UpdateCartItemQuantity([FromBody] CartUpdateRequest request)
+        {
+            try
+            {
+                int result = repository.UpdateCartItemQuantity(request.CartItemId, request.Quantity);
+                if (result > 0)
+                {
+                    return Ok(new { success = true, message = "Cart item updated successfully" });
+                }
+                else
+                {
+                    return StatusCode(500, new { success = false, message = "Failed to update cart item" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpDelete("remove/{cartItemId}")]
+        public IActionResult RemoveFromCart(int cartItemId)
+        {
+            try
+            {
+                int result = repository.RemoveFromCart(cartItemId);
+                if (result > 0)
+                {
+                    return Ok(new { success = true, message = "Item removed from cart successfully" });
+                }
+                else
+                {
+                    return StatusCode(500, new { success = false, message = "Failed to remove item from cart" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpDelete("clear/{cartId}")]
+        public IActionResult ClearCart(int cartId)
+        {
+            try
+            {
+                int result = repository.ClearCart(cartId);
+                if (result >= 0)
+                {
+                    return Ok(new { success = true, message = "Cart cleared successfully" });
+                }
+                else
+                {
+                    return StatusCode(500, new { success = false, message = "Failed to clear cart" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet("items/{userId}")]
+        public IActionResult GetCartItems(int userId)
+        {
+            try
+            {
+                List<CartItemDetail> cartItems = repository.GetCartItems(userId);
+                return Ok(cartItems);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+    }
+
+    // Request models
+    public class CartAddRequest
+    {
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
+        public int Quantity { get; set; } = 1;
+    }
+
+    public class CartUpdateRequest
+    {
+        public int CartItemId { get; set; }
+        public int Quantity { get; set; }
+    }
+}
