@@ -1,0 +1,10 @@
+// Add these methods to your IShop3DRepository interface
+
+List<CartItem> GetCartItems(int userId);
+CartSummary GetCartSummary(int userId);
+bool AddToCart(int userId, int productId, int quantity, string customizationDetails = null);
+bool UpdateCartItemQuantity(int cartItemId, int quantity);
+bool RemoveFromCart(int cartItemId);
+bool ClearCart(int userId);
+int ConvertCartToOrder(int userId, string shippingAddress, string shippingCity, 
+                      string shippingState, string shippingPostalCode, string shippingCountry);
