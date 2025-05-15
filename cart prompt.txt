@@ -355,12 +355,13 @@ END
 GO
 
 
-Now I want to add the cart database in which I can add the required products to cart.
+Now I want to add the cart database with 2 tables Carts and CartItems.Cart table must have only 2 fields which are cartid and userid and CartItems table must have fields cartItemId,CartId,ProductId,Quantity only.I want this databse so that I can add the required products to cart.
 Please create the required cart database for me with required insert statements too.
 And also please give me the required methods in the DAL layer and the Web API too.
+ALso in the stored Procedure of add products, If the product already exits in the cart i want you to return -1 like that so that in the front end part i can give an alert to the user that the product already added.
   I will give one example method in the DAL and Web API.
   
-  Example DAL mwthod present in the Shop3DRepository.cs::
+  Example DAL method present in the Shop3DRepository.cs::
 public List<Product> GetAllProducts()
 {
     List<Product> products = new List<Product>();
