@@ -1,0 +1,131 @@
+// Cart-related methods for Shop3DRepository.cs
+
+public int CreateCart(int userId)
+{
+    int result = -1;
+    try
+    {
+        SqlParameter[] parameters = new SqlParameter[]
+        {
+            new SqlParameter("@UserID", userId)
+        };
+
+        result = context.Database.ExecuteSqlRaw("EXEC sp_CreateCart @UserID", parameters);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        result = -99;
+    }
+    return result;
+}
+
+public Cart GetCartByUserId(int userId)
+{
+    Cart cart = null;
+    try
+    {
+        SqlParameter parameter = new SqlParameter("@UserID", userId);
+        cart = context.Carts.FromSqlRaw("EXEC sp_GetCartByUserID @UserID", parameter)
+                           .AsEnumerable()
+                           .FirstOrDefault();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+    }
+    return cart;
+}
+
+public int AddToCart(int userId, int productId, int quantity)
+{
+    int result = -1;
+    try
+    {
+        SqlParameter[] parameters = new SqlParameter[]
+        {
+            new SqlParameter("@UserID", userId),
+            new SqlParameter("@ProductID", productId),
+            new SqlParameter("@Quantity", quantity)
+        };
+
+        result = context.Database.ExecuteSqlRaw("EXEC sp_AddToCart @UserID, @ProductID, @Quantity", parameters);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        result = -99;
+    }
+    return result;
+}
+
+public int UpdateCartItemQuantity(int cartItemId, int quantity)
+{
+    int result = 0;
+    try
+    {
+        SqlParameter[] parameters = new SqlParameter[]
+        {
+            new SqlParameter("@CartItemID", cartItemId),
+            new SqlParameter("@Quantity", quantity)
+        };
+
+        result = context.Database.ExecuteSqlRaw("EXEC sp_UpdateCartItemQuantity @CartItemID, @Quantity", parameters);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        result = -1;
+    }
+    return result;
+}
+
+public int RemoveFromCart(int cartItemId)
+{
+    int result = 0;
+    try
+    {
+        SqlParameter parameter = new SqlParameter("@CartItemID", cartItemId);
+        result = context.Database.ExecuteSqlRaw("EXEC sp_RemoveFromCart @CartItemID", parameter);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        result = -1;
+    }
+    return result;
+}
+
+public int ClearCart(int cartId)
+{
+    int result = 0;
+    try
+    {
+        SqlParameter parameter = new SqlParameter("@CartID", cartId);
+        result = context.Database.ExecuteSqlRaw("EXEC sp_ClearCart @CartID", parameter);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        result = -1;
+    }
+    return result;
+}
+
+public List<CartItemDetail> GetCartItems(int userId)
+{
+    List<CartItemDetail> cartItems = new List<CartItemDetail>();
+    try
+    {
+        SqlParameter parameter = new SqlParameter("@UserID", userId);
+        cartItems = context.Set<CartItemDetail>()
+                          .FromSqlRaw("EXEC sp_GetCartItems @UserID", parameter)
+                          .ToList();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        cartItems = new List<CartItemDetail>();
+    }
+    return cartItems;
+}
