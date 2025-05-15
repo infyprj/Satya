@@ -1,0 +1,278 @@
+-- Cart Tables
+IF OBJECT_ID('CartItems') IS NOT NULL
+    DROP TABLE CartItems
+GO
+
+IF OBJECT_ID('Carts') IS NOT NULL
+    DROP TABLE Carts
+GO
+
+-- Cart table to store cart information per user
+CREATE TABLE Carts (
+    CartID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT NOT NULL FOREIGN KEY REFERENCES Users(UserID) ON DELETE CASCADE,
+    CreatedDate DATETIME DEFAULT GETDATE(),
+    LastModifiedDate DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- CartItems table to store items in each cart
+CREATE TABLE CartItems (
+    CartItemID INT PRIMARY KEY IDENTITY(1,1),
+    CartID INT NOT NULL FOREIGN KEY REFERENCES Carts(CartID) ON DELETE CASCADE,
+    ProductID INT NOT NULL FOREIGN KEY REFERENCES Products(ProductID),
+    Quantity INT NOT NULL DEFAULT 1,
+    CustomizationDetails NVARCHAR(MAX),
+    DateAdded DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- Insert sample data
+INSERT INTO Carts (UserID)
+VALUES 
+(1),
+(2),
+(3);
+GO
+
+INSERT INTO CartItems (CartID, ProductID, Quantity, CustomizationDetails)
+VALUES 
+(1, 1, 2, 'Color: Blue'),
+(1, 3, 1, NULL),
+(2, 2, 1, 'Size: Large'),
+(3, 4, 3, NULL);
+GO
+
+-- Stored Procedure to add item to cart
+CREATE PROCEDURE sp_AddToCart
+    @UserID INT,
+    @ProductID INT,
+    @Quantity INT,
+    @CustomizationDetails NVARCHAR(MAX) = NULL
+AS
+BEGIN
+    DECLARE @CartID INT
+    
+    -- Check if user already has a cart
+    SELECT @CartID = CartID FROM Carts WHERE UserID = @UserID
+    
+    -- If no cart exists, create one
+    IF @CartID IS NULL
+    BEGIN
+        INSERT INTO Carts (UserID)
+        VALUES (@UserID)
+        
+        SET @CartID = SCOPE_IDENTITY()
+    END
+    
+    -- Check if product already exists in cart
+    DECLARE @ExistingCartItemID INT
+    SELECT @ExistingCartItemID = CartItemID 
+    FROM CartItems 
+    WHERE CartID = @CartID AND ProductID = @ProductID
+        AND ((@CustomizationDetails IS NULL AND CustomizationDetails IS NULL)
+             OR CustomizationDetails = @CustomizationDetails)
+    
+    -- Update quantity if product exists, otherwise add new item
+    IF @ExistingCartItemID IS NOT NULL
+    BEGIN
+        UPDATE CartItems
+        SET Quantity = Quantity + @Quantity
+        WHERE CartItemID = @ExistingCartItemID
+    END
+    ELSE
+    BEGIN
+        INSERT INTO CartItems (CartID, ProductID, Quantity, CustomizationDetails)
+        VALUES (@CartID, @ProductID, @Quantity, @CustomizationDetails)
+    END
+    
+    -- Update last modified date
+    UPDATE Carts
+    SET LastModifiedDate = GETDATE()
+    WHERE CartID = @CartID
+    
+    RETURN 1
+END
+GO
+
+-- Stored Procedure to update cart item quantity
+CREATE PROCEDURE sp_UpdateCartItemQuantity
+    @CartItemID INT,
+    @Quantity INT
+AS
+BEGIN
+    DECLARE @CartID INT
+    
+    -- Get CartID for the item
+    SELECT @CartID = CartID FROM CartItems WHERE CartItemID = @CartItemID
+    
+    IF @CartID IS NULL
+        RETURN 0
+        
+    IF @Quantity <= 0
+    BEGIN
+        -- Remove item if quantity is 0 or negative
+        DELETE FROM CartItems WHERE CartItemID = @CartItemID
+    END
+    ELSE
+    BEGIN
+        -- Update quantity
+        UPDATE CartItems
+        SET Quantity = @Quantity
+        WHERE CartItemID = @CartItemID
+    END
+    
+    -- Update last modified date
+    UPDATE Carts
+    SET LastModifiedDate = GETDATE()
+    WHERE CartID = @CartID
+    
+    RETURN 1
+END
+GO
+
+-- Stored Procedure to remove item from cart
+CREATE PROCEDURE sp_RemoveFromCart
+    @CartItemID INT
+AS
+BEGIN
+    DECLARE @CartID INT
+    
+    -- Get CartID for the item
+    SELECT @CartID = CartID FROM CartItems WHERE CartItemID = @CartItemID
+    
+    IF @CartID IS NULL
+        RETURN 0
+        
+    -- Delete the cart item
+    DELETE FROM CartItems WHERE CartItemID = @CartItemID
+    
+    -- Update last modified date
+    UPDATE Carts
+    SET LastModifiedDate = GETDATE()
+    WHERE CartID = @CartID
+    
+    RETURN 1
+END
+GO
+
+-- Stored Procedure to get cart items for a user
+CREATE PROCEDURE sp_GetCartItems
+    @UserID INT
+AS
+BEGIN
+    SELECT ci.CartItemID, ci.CartID, ci.ProductID, ci.Quantity, ci.CustomizationDetails, ci.DateAdded,
+           p.Name AS ProductName, p.Price, p.ThumbnailURL, p.ModelURL,
+           (p.Price * ci.Quantity) AS Subtotal
+    FROM CartItems ci
+    JOIN Carts c ON ci.CartID = c.CartID
+    JOIN Products p ON ci.ProductID = p.ProductID
+    WHERE c.UserID = @UserID
+    ORDER BY ci.DateAdded DESC
+END
+GO
+
+-- Stored Procedure to clear cart
+CREATE PROCEDURE sp_ClearCart
+    @UserID INT
+AS
+BEGIN
+    DECLARE @CartID INT
+    
+    -- Get CartID for the user
+    SELECT @CartID = CartID FROM Carts WHERE UserID = @UserID
+    
+    IF @CartID IS NULL
+        RETURN 0
+        
+    -- Delete all items in the cart
+    DELETE FROM CartItems WHERE CartID = @CartID
+    
+    -- Update last modified date
+    UPDATE Carts
+    SET LastModifiedDate = GETDATE()
+    WHERE CartID = @CartID
+    
+    RETURN 1
+END
+GO
+
+-- Stored Procedure to get cart summary
+CREATE PROCEDURE sp_GetCartSummary
+    @UserID INT
+AS
+BEGIN
+    SELECT 
+        COUNT(ci.CartItemID) AS TotalItems,
+        SUM(ci.Quantity) AS TotalQuantity,
+        SUM(p.Price * ci.Quantity) AS TotalAmount
+    FROM Carts c
+    LEFT JOIN CartItems ci ON c.CartID = ci.CartID
+    LEFT JOIN Products p ON ci.ProductID = p.ProductID
+    WHERE c.UserID = @UserID
+END
+GO
+
+-- Stored Procedure to convert cart to order
+CREATE PROCEDURE sp_ConvertCartToOrder
+    @UserID INT,
+    @ShippingAddress NVARCHAR(255),
+    @ShippingCity NVARCHAR(100),
+    @ShippingState NVARCHAR(100),
+    @ShippingPostalCode NVARCHAR(20),
+    @ShippingCountry NVARCHAR(100)
+AS
+BEGIN
+    BEGIN TRANSACTION
+    
+    DECLARE @CartID INT
+    DECLARE @TotalAmount DECIMAL(18, 2) = 0
+    DECLARE @OrderID INT
+    
+    -- Get CartID for the user
+    SELECT @CartID = CartID FROM Carts WHERE UserID = @UserID
+    
+    IF @CartID IS NULL OR NOT EXISTS (SELECT 1 FROM CartItems WHERE CartID = @CartID)
+    BEGIN
+        ROLLBACK
+        RETURN 0 -- No cart or empty cart
+    END
+    
+    -- Calculate total amount
+    SELECT @TotalAmount = SUM(p.Price * ci.Quantity)
+    FROM CartItems ci
+    JOIN Products p ON ci.ProductID = p.ProductID
+    WHERE ci.CartID = @CartID
+    
+    -- Create new order
+    INSERT INTO Orders (UserID, TotalAmount, ShippingAddress, ShippingCity, ShippingState, ShippingPostalCode, ShippingCountry)
+    VALUES (@UserID, @TotalAmount, @ShippingAddress, @ShippingCity, @ShippingState, @ShippingPostalCode, @ShippingCountry)
+    
+    SET @OrderID = SCOPE_IDENTITY()
+    
+    -- Transfer cart items to order items
+    INSERT INTO OrderItems (OrderID, ProductID, Quantity, UnitPrice, CustomizationDetails)
+    SELECT @OrderID, ci.ProductID, ci.Quantity, p.Price, ci.CustomizationDetails
+    FROM CartItems ci
+    JOIN Products p ON ci.ProductID = p.ProductID
+    WHERE ci.CartID = @CartID
+    
+    -- Update product quantities
+    UPDATE p
+    SET p.Quantity = p.Quantity - ci.Quantity
+    FROM Products p
+    JOIN CartItems ci ON p.ProductID = ci.ProductID
+    WHERE ci.CartID = @CartID
+    
+    -- Clear the cart
+    DELETE FROM CartItems WHERE CartID = @CartID
+    
+    -- Update last modified date
+    UPDATE Carts
+    SET LastModifiedDate = GETDATE()
+    WHERE CartID = @CartID
+    
+    COMMIT
+    RETURN @OrderID -- Return the new order ID
+END
+GO
