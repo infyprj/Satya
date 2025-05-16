@@ -1,0 +1,175 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h2 class="mb-0">Update Profile</h2>
+        </div>
+        <div class="card-body">
+          <div *ngIf="isLoading" class="text-center p-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading your profile...</p>
+          </div>
+
+          <div *ngIf="successMessage" class="alert alert-success">
+            {{ successMessage }}
+          </div>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+
+          <form *ngIf="!isLoading" #profileForm="ngForm" (ngSubmit)="onSubmit(profileForm)">
+            <input type="hidden" [(ngModel)]="userProfile.userId" name="userId">
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="firstName" class="form-label">First Name</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="firstName" 
+                  name="firstName" 
+                  [(ngModel)]="userProfile.firstName" 
+                  required 
+                  #firstName="ngModel">
+                <div *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)" class="text-danger">
+                  First name is required.
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="lastName" class="form-label">Last Name</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="lastName" 
+                  name="lastName" 
+                  [(ngModel)]="userProfile.lastName" 
+                  required 
+                  #lastName="ngModel">
+                <div *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)" class="text-danger">
+                  Last name is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="phoneNumber" class="form-label">Phone Number</label>
+              <input 
+                type="tel" 
+                class="form-control" 
+                id="phoneNumber" 
+                name="phoneNumber" 
+                [(ngModel)]="userProfile.phoneNumber" 
+                required 
+                pattern="[0-9]{10}" 
+                #phoneNumber="ngModel">
+              <div *ngIf="phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)" class="text-danger">
+                <div *ngIf="phoneNumber.errors?.['required']">Phone number is required.</div>
+                <div *ngIf="phoneNumber.errors?.['pattern']">Please enter a valid 10-digit phone number.</div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="address" 
+                name="address" 
+                [(ngModel)]="userProfile.address" 
+                required 
+                #address="ngModel">
+              <div *ngIf="address.invalid && (address.dirty || address.touched)" class="text-danger">
+                Address is required.
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="city" 
+                  name="city" 
+                  [(ngModel)]="userProfile.city" 
+                  required 
+                  #city="ngModel">
+                <div *ngIf="city.invalid && (city.dirty || city.touched)" class="text-danger">
+                  City is required.
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="state" class="form-label">State</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="state" 
+                  name="state" 
+                  [(ngModel)]="userProfile.state" 
+                  required 
+                  #state="ngModel">
+                <div *ngIf="state.invalid && (state.dirty || state.touched)" class="text-danger">
+                  State is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="postalCode" class="form-label">Postal Code</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="postalCode" 
+                  name="postalCode" 
+                  [(ngModel)]="userProfile.postalCode" 
+                  required 
+                  #postalCode="ngModel">
+                <div *ngIf="postalCode.invalid && (postalCode.dirty || postalCode.touched)" class="text-danger">
+                  Postal code is required.
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="country" class="form-label">Country</label>
+                <input 
+                  type="text" 
+                  class="form-control" 
+                  id="country" 
+                  name="country" 
+                  [(ngModel)]="userProfile.country" 
+                  required 
+                  #country="ngModel">
+                <div *ngIf="country.invalid && (country.dirty || country.touched)" class="text-danger">
+                  Country is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <button 
+                type="button" 
+                class="btn btn-secondary me-md-2" 
+                (click)="loadUserProfile()">
+                Reset
+              </button>
+              <button 
+                type="submit" 
+                class="btn btn-primary" 
+                [disabled]="profileForm.invalid || isSubmitting">
+                <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+                Update Profile
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
