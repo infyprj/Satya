@@ -1,0 +1,14 @@
+[HttpGet]
+public JsonResult GetUserProfile(int userId)
+{
+    User user = new User();
+    try
+    {
+        user = repository.getUserProfile(userId);
+    }
+    catch (Exception ex)
+    {
+        user = null;
+    }
+    return Json(user);
+}
