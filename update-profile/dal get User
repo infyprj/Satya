@@ -1,0 +1,18 @@
+#region GetUserProfile
+public User getUserProfile(int userId)
+{
+    User user = null;
+    try
+    {
+        user = (from u in context.Users
+                where u.UserId == userId
+                select u).FirstOrDefault();
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        user = null;
+    }
+    return user;
+}
+#endregion
