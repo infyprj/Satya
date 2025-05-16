@@ -1,0 +1,44 @@
+I am trying to create a web page of updating the user profile information.
+For that I have the below web API Link and its working.
+
+Request body
+{
+  "userId": 6,
+  "firstName": "Fi",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "address": "string",
+  "city": "string",
+  "state": "string",
+  "postalCode": "string",
+  "country": "string"
+}
+
+Curl
+
+curl -X 'PUT' \
+  'https://localhost:7195/api/User/UpdateUserDetails' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "userId": 6,
+  "firstName": "Fi",
+  "lastName": "string",
+  "phoneNumber": "string",
+  "address": "string",
+  "city": "string",
+  "state": "string",
+  "postalCode": "string",
+  "country": "string"
+}'
+
+Request URL
+https://localhost:7195/api/User/UpdateUserDetails
+
+Response body
+true
+
+After executing this, the values got updated in the database.
+Now give me a service.ts class to execute this link.
+Also give me the angular component code in which i will get a phone with the previous values already filled and are able to be updated.
+Make use of the ngModel,ngSubmit etc..
