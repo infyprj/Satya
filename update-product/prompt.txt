@@ -1,0 +1,43 @@
+My user interface is, In one web page all the products available will be displayed. If the user who logged in is admin, the admin has only 3 operations which are adding the product,deleting the product and updating the product.
+Now if the user who logged in is admin, then below of each product thumbnail there will be 2 buttons which are update and delete.
+These are visible to only admin. And these buttons are visible below to each product thumbnail.
+Now i need to implement the component of update-product.
+How need it to work is, when i click the update button then a page need to be open where there will be a form opened with all the product values filled.
+Now when i changed those values and clicked the submit button, the values should be changed in the database.
+I will keep the coresponding web api link for you.::
+Request body
+{
+  "productId": 1,
+  "name": "string",
+  "description": "asdfghj",
+  "price": 1,
+  "categoryId": 1,
+  "modelUrl": "string",
+  "thumbnailUrl": "string",
+  "quantity": 1
+}
+
+Curl
+
+curl -X 'PUT' \
+  'https://localhost:7195/api/Product/UpdateProduct' \
+  -H 'accept: */*' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "productId": 1,
+  "name": "string",
+  "description": "asdfghj",
+  "price": 1,
+  "categoryId": 1,
+  "modelUrl": "string",
+  "thumbnailUrl": "string",
+  "quantity": 1
+}'
+Request URL
+https://localhost:7195/api/Product/UpdateProduct
+
+Response body
+true
+
+I ensure you that this link is working fine.
+Now please give me the service.ts code and the component code.
