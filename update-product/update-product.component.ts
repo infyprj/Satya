@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, Product } from '../../services/product.service';
 
@@ -9,46 +9,44 @@ import { ProductService, Product } from '../../services/product.service';
   styleUrls: ['./update-product.component.css']
 })
 export class UpdateProductComponent implements OnInit {
-  productForm!: FormGroup;
-  productId!: number;
+  @ViewChild('productForm') productForm!: NgForm;
+  
+  product: Product = {
+    productId: 0,
+    name: '',
+    description: '',
+    price: 0,
+    categoryId: 0,
+    modelUrl: '',
+    thumbnailUrl: '',
+    quantity: 0
+  };
+  
   isLoading = false;
   errorMessage = '';
+  successMessage = '';
 
   constructor(
-    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService
   ) { }
 
   ngOnInit(): void {
-    this.initForm();
-    
     // Get the product ID from the route parameters
     this.route.params.subscribe(params => {
-      this.productId = +params['id'];
-      this.loadProductData();
+      const id = +params['id'];
+      if (id) {
+        this.loadProductData(id);
+      }
     });
   }
 
-  initForm(): void {
-    this.productForm = this.fb.group({
-      productId: [0, Validators.required],
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      price: [0, [Validators.required, Validators.min(0)]],
-      categoryId: [0, Validators.required],
-      modelUrl: ['', Validators.required],
-      thumbnailUrl: ['', Validators.required],
-      quantity: [0, [Validators.required, Validators.min(0)]]
-    });
-  }
-
-  loadProductData(): void {
+  loadProductData(id: number): void {
     this.isLoading = true;
-    this.productService.getProductById(this.productId).subscribe({
-      next: (product) => {
-        this.productForm.patchValue(product);
+    this.productService.getProductById(id).subscribe({
+      next: (data) => {
+        this.product = data;
         this.isLoading = false;
       },
       error: (error) => {
@@ -65,14 +63,18 @@ export class UpdateProductComponent implements OnInit {
     }
 
     this.isLoading = true;
-    const updatedProduct: Product = this.productForm.value;
+    this.errorMessage = '';
+    this.successMessage = '';
     
-    this.productService.updateProduct(updatedProduct).subscribe({
+    this.productService.updateProduct(this.product).subscribe({
       next: (result) => {
         this.isLoading = false;
         if (result) {
-          // Navigate back to products list after successful update
-          this.router.navigate(['/products']);
+          this.successMessage = 'Product updated successfully!';
+          // Navigate back to products list after 2 seconds
+          setTimeout(() => {
+            this.router.navigate(['/products']);
+          }, 2000);
         } else {
           this.errorMessage = 'Update failed. Please try again.';
         }
@@ -83,5 +85,14 @@ export class UpdateProductComponent implements OnInit {
         console.error('Error updating product:', error);
       }
     });
+  }
+
+  // Helper method to prevent non-numeric input in number fields
+  onNumberInput(event: any): boolean {
+    const charCode = (event.which) ? event.which : event.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+      return false;
+    }
+    return true;
   }
 }
