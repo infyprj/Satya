@@ -1,48 +1,31 @@
-// Service to handle product-related API calls
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
 export interface Product {
-  productId: number
-  name: string
-  description: string
-  price: number
-  categoryId: number
-  modelUrl: string
-  thumbnailUrl: string
-  quantity: number
+  productId: number;
+  name: string;
+  description: string;
+  price: number;
+  categoryId: number;
+  modelUrl: string;
+  thumbnailUrl: string;
+  quantity: number;
 }
 
-export async function getProductById(id: number): Promise<Product> {
-  try {
-    // Replace with your actual API endpoint for getting a product by ID
-    const response = await fetch(`https://localhost:7195/api/Product/${id}`)
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductService {
+  private apiUrl = 'https://localhost:7195/api';
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch product: ${response.statusText}`)
-    }
+  constructor(private http: HttpClient) { }
 
-    return await response.json()
-  } catch (error) {
-    console.error("Error fetching product:", error)
-    throw error
+  getProductById(id: number): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/Product/${id}`);
   }
-}
 
-export async function updateProduct(product: Product): Promise<boolean> {
-  try {
-    const response = await fetch("https://localhost:7195/api/Product/UpdateProduct", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
-    })
-
-    if (!response.ok) {
-      throw new Error(`Failed to update product: ${response.statusText}`)
-    }
-
-    return await response.json()
-  } catch (error) {
-    console.error("Error updating product:", error)
-    throw error
+  updateProduct(product: Product): Observable<boolean> {
+    return this.http.put<boolean>(`${this.apiUrl}/Product/UpdateProduct`, product);
   }
 }
