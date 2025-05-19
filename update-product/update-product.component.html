@@ -11,9 +11,13 @@
     {{ errorMessage }}
   </div>
 
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <form #productForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
     <!-- Hidden Product ID field -->
-    <input type="hidden" formControlName="productId">
+    <input type="hidden" name="productId" [(ngModel)]="product.productId">
 
     <div class="mb-3">
       <label for="name" class="form-label">Product Name</label>
@@ -21,9 +25,12 @@
         type="text" 
         class="form-control" 
         id="name" 
-        formControlName="name"
-        [ngClass]="{'is-invalid': productForm.get('name')?.invalid && productForm.get('name')?.touched}">
-      <div class="invalid-feedback" *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+        name="name"
+        [(ngModel)]="product.name"
+        #name="ngModel"
+        required
+        [ngClass]="{'is-invalid': name.invalid && (name.dirty || name.touched)}">
+      <div class="invalid-feedback" *ngIf="name.invalid && (name.dirty || name.touched)">
         Product name is required.
       </div>
     </div>
@@ -34,9 +41,12 @@
         class="form-control" 
         id="description" 
         rows="3" 
-        formControlName="description"
-        [ngClass]="{'is-invalid': productForm.get('description')?.invalid && productForm.get('description')?.touched}"></textarea>
-      <div class="invalid-feedback" *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched">
+        name="description"
+        [(ngModel)]="product.description"
+        #description="ngModel"
+        required
+        [ngClass]="{'is-invalid': description.invalid && (description.dirty || description.touched)}"></textarea>
+      <div class="invalid-feedback" *ngIf="description.invalid && (description.dirty || description.touched)">
         Description is required.
       </div>
     </div>
@@ -47,10 +57,15 @@
         type="number" 
         class="form-control" 
         id="price" 
-        formControlName="price"
-        [ngClass]="{'is-invalid': productForm.get('price')?.invalid && productForm.get('price')?.touched}">
-      <div class="invalid-feedback" *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched">
-        Valid price is required.
+        name="price"
+        [(ngModel)]="product.price"
+        #price="ngModel"
+        required
+        min="0"
+        [ngClass]="{'is-invalid': price.invalid && (price.dirty || price.touched)}">
+      <div class="invalid-feedback" *ngIf="price.invalid && (price.dirty || price.touched)">
+        <span *ngIf="price.errors?.['required']">Price is required.</span>
+        <span *ngIf="price.errors?.['min']">Price must be greater than or equal to 0.</span>
       </div>
     </div>
 
@@ -60,10 +75,15 @@
         type="number" 
         class="form-control" 
         id="categoryId" 
-        formControlName="categoryId"
-        [ngClass]="{'is-invalid': productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched}">
-      <div class="invalid-feedback" *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched">
-        Category ID is required.
+        name="categoryId"
+        [(ngModel)]="product.categoryId"
+        #categoryId="ngModel"
+        required
+        min="1"
+        [ngClass]="{'is-invalid': categoryId.invalid && (categoryId.dirty || categoryId.touched)}">
+      <div class="invalid-feedback" *ngIf="categoryId.invalid && (categoryId.dirty || categoryId.touched)">
+        <span *ngIf="categoryId.errors?.['required']">Category ID is required.</span>
+        <span *ngIf="categoryId.errors?.['min']">Category ID must be greater than 0.</span>
       </div>
     </div>
 
@@ -73,9 +93,12 @@
         type="text" 
         class="form-control" 
         id="modelUrl" 
-        formControlName="modelUrl"
-        [ngClass]="{'is-invalid': productForm.get('modelUrl')?.invalid && productForm.get('modelUrl')?.touched}">
-      <div class="invalid-feedback" *ngIf="productForm.get('modelUrl')?.invalid && productForm.get('modelUrl')?.touched">
+        name="modelUrl"
+        [(ngModel)]="product.modelUrl"
+        #modelUrl="ngModel"
+        required
+        [ngClass]="{'is-invalid': modelUrl.invalid && (modelUrl.dirty || modelUrl.touched)}">
+      <div class="invalid-feedback" *ngIf="modelUrl.invalid && (modelUrl.dirty || modelUrl.touched)">
         Model URL is required.
       </div>
     </div>
@@ -86,9 +109,12 @@
         type="text" 
         class="form-control" 
         id="thumbnailUrl" 
-        formControlName="thumbnailUrl"
-        [ngClass]="{'is-invalid': productForm.get('thumbnailUrl')?.invalid && productForm.get('thumbnailUrl')?.touched}">
-      <div class="invalid-feedback" *ngIf="productForm.get('thumbnailUrl')?.invalid && productForm.get('thumbnailUrl')?.touched">
+        name="thumbnailUrl"
+        [(ngModel)]="product.thumbnailUrl"
+        #thumbnailUrl="ngModel"
+        required
+        [ngClass]="{'is-invalid': thumbnailUrl.invalid && (thumbnailUrl.dirty || thumbnailUrl.touched)}">
+      <div class="invalid-feedback" *ngIf="thumbnailUrl.invalid && (thumbnailUrl.dirty || thumbnailUrl.touched)">
         Thumbnail URL is required.
       </div>
     </div>
@@ -99,10 +125,15 @@
         type="number" 
         class="form-control" 
         id="quantity" 
-        formControlName="quantity"
-        [ngClass]="{'is-invalid': productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched}">
-      <div class="invalid-feedback" *ngIf="productForm.get('quantity')?.invalid && productForm.get('quantity')?.touched">
-        Valid quantity is required.
+        name="quantity"
+        [(ngModel)]="product.quantity"
+        #quantity="ngModel"
+        required
+        min="0"
+        [ngClass]="{'is-invalid': quantity.invalid && (quantity.dirty || quantity.touched)}">
+      <div class="invalid-feedback" *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)">
+        <span *ngIf="quantity.errors?.['required']">Quantity is required.</span>
+        <span *ngIf="quantity.errors?.['min']">Quantity must be greater than or equal to 0.</span>
       </div>
     </div>
 
