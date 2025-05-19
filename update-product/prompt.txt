@@ -45,3 +45,5 @@ NOTE: give me everything using angular
 product.service.ts
 update-product.component.ts
 update-product.component.html
+
+Also for the html form please use ngForm,ngSubmit,ngModel etc.. but not formGroup.
