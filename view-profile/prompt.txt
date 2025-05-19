@@ -1,0 +1,30 @@
+I want a view-profile component where i can view all the user details which are non editable.
+I need a good eye shining ui for it.
+i will now keep the corresponding web api link.
+Curl
+
+curl -X 'GET' \
+  'https://localhost:7195/api/User/GetUserProfile?userId=2' \
+  -H 'accept: */*'
+Request URL
+https://localhost:7195/api/User/GetUserProfile?userId=2
+
+Response body
+Download
+{
+  "email": "manager@example.com",
+  "passwordHash": "hashed_pw_2",
+  "firstName": "Bob",
+  "lastName": "Manager",
+  "phoneNumber": "2345678901",
+  "address": "456 Manager Ave",
+  "city": "Los Angeles",
+  "state": "CA",
+  "postalCode": "90001",
+  "country": "USA",
+  "roleId": 2
+}
+
+I ensure you that this link is working fine.
+i dont want the role id to be displayed.
+Now please give me the corresponding service.ts code and the component code.
