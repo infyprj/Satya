@@ -41,4 +41,7 @@ true
 
 I ensure you that this link is working fine.
 Now please give me the service.ts code and the component code.
-
+NOTE: give me everything using angular 
+product.service.ts
+update-product.component.ts
+update-product.component.html
