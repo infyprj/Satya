@@ -1,5 +1,4 @@
 I want a view-profile component where i can view all the user details which are non editable.
-I need a good eye shining ui for it.
 i will now keep the corresponding web api link.
 Curl
 
@@ -10,7 +9,6 @@ Request URL
 https://localhost:7195/api/User/GetUserProfile?userId=2
 
 Response body
-Download
 {
   "email": "manager@example.com",
   "passwordHash": "hashed_pw_2",
@@ -26,5 +24,10 @@ Download
 }
 
 I ensure you that this link is working fine.
-i dont want the role id to be displayed.
+i dont want the role id and passwordHash to be displayed.
 Now please give me the corresponding service.ts code and the component code.
+Note: Give me everything using angular
+user.service.ts
+view-profile.component.ts
+view-profile.component.html
+if you have to use anything related to forms then use ngForm,ngSubmit,ngIf,ngModel etc.. but dont use the FormGroups.
