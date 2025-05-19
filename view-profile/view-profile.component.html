@@ -1,0 +1,84 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h2>User Profile</h2>
+    </div>
+    
+    <div class="card-body">
+      <div *ngIf="isLoading" class="text-center my-4">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="userProfile && !isLoading" class="row">
+        <div class="col-md-6">
+          <div class="mb-4">
+            <h4 class="text-primary">Personal Information</h4>
+            <div class="mb-3">
+              <label class="form-label fw-bold">First Name:</label>
+              <p class="form-control-plaintext">{{ userProfile.firstName }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">Last Name:</label>
+              <p class="form-control-plaintext">{{ userProfile.lastName }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">Email:</label>
+              <p class="form-control-plaintext">{{ userProfile.email }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">Phone Number:</label>
+              <p class="form-control-plaintext">{{ userProfile.phoneNumber }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          <div class="mb-4">
+            <h4 class="text-primary">Address Information</h4>
+            <div class="mb-3">
+              <label class="form-label fw-bold">Address:</label>
+              <p class="form-control-plaintext">{{ userProfile.address }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">City:</label>
+              <p class="form-control-plaintext">{{ userProfile.city }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">State:</label>
+              <p class="form-control-plaintext">{{ userProfile.state }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">Postal Code:</label>
+              <p class="form-control-plaintext">{{ userProfile.postalCode }}</p>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label fw-bold">Country:</label>
+              <p class="form-control-plaintext">{{ userProfile.country }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!userProfile && !isLoading && !errorMessage" class="alert alert-info">
+        No user profile data available.
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <button class="btn btn-secondary" routerLink="/dashboard">Back to Dashboard</button>
+    </div>
+  </div>
+</div>
