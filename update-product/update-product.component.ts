@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
-import { ProductService, IProduct } from '../services/product.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProductService, Product } from '../../services/product.service';
 
 @Component({
   selector: 'app-update-product',
@@ -8,81 +9,79 @@ import { ProductService, IProduct } from '../services/product.service';
   styleUrls: ['./update-product.component.css']
 })
 export class UpdateProductComponent implements OnInit {
-  status: string = "";
-  errorMsg: string = "";
-  showDiv: boolean = false;
-  products: IProduct[] = [];
-  selectedProduct: IProduct | null = null;
-  categories = [
-    { id: 1, name: 'Sofa' },
-    { id: 2, name: 'Table' },
-    { id: 3, name: 'Bed' },
-    { id: 4, name: 'Chair' }
-  ];
+  productForm!: FormGroup;
+  productId!: number;
+  isLoading = false;
+  errorMessage = '';
 
-  constructor(private _productService: ProductService) { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private productService: ProductService
+  ) { }
 
-  ngOnInit() {
-    this.loadProducts();
+  ngOnInit(): void {
+    this.initForm();
+    
+    // Get the product ID from the route parameters
+    this.route.params.subscribe(params => {
+      this.productId = +params['id'];
+      this.loadProductData();
+    });
   }
 
-  loadProducts() {
-    this._productService.getAllProducts().subscribe(
-      products => {
-        this.products = products;
+  initForm(): void {
+    this.productForm = this.fb.group({
+      productId: [0, Validators.required],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
+      categoryId: [0, Validators.required],
+      modelUrl: ['', Validators.required],
+      thumbnailUrl: ['', Validators.required],
+      quantity: [0, [Validators.required, Validators.min(0)]]
+    });
+  }
+
+  loadProductData(): void {
+    this.isLoading = true;
+    this.productService.getProductById(this.productId).subscribe({
+      next: (product) => {
+        this.productForm.patchValue(product);
+        this.isLoading = false;
       },
-      error => {
-        this.errorMsg = error;
+      error: (error) => {
+        this.errorMessage = 'Failed to load product data. Please try again.';
+        console.error('Error loading product:', error);
+        this.isLoading = false;
       }
-    );
+    });
   }
 
-  onProductSelect(event: any) {
-    const productId = parseInt(event.target.value);
-    if (productId) {
-      this._productService.getProductById(productId).subscribe(
-        product => {
-          this.selectedProduct = product;
-        },
-        error => {
-          this.errorMsg = error;
-        }
-      );
-    } else {
-      this.selectedProduct = null;
+  onSubmit(): void {
+    if (this.productForm.invalid) {
+      return;
     }
-  }
 
-  submitUpdateProductForm(form: NgForm) {
-    if (!this.selectedProduct) return;
-
-    const updatedProduct: IProduct = {
-      productId: this.selectedProduct.productId,
-      name: form.value.name,
-      description: form.value.description,
-      price: form.value.price,
-      categoryId: form.value.categoryId,
-      modelUrl: form.value.modelUrl,
-      thumbnailUrl: form.value.thumbnailUrl,
-      quantity: form.value.quantity
-    };
-
-    this._productService.updateProduct(updatedProduct).subscribe(
-      response => {
-        this.showDiv = true;
-        if (response.success) {
-          this.status = "Product updated successfully!";
-          this.loadProducts(); // Refresh the product list
+    this.isLoading = true;
+    const updatedProduct: Product = this.productForm.value;
+    
+    this.productService.updateProduct(updatedProduct).subscribe({
+      next: (result) => {
+        this.isLoading = false;
+        if (result) {
+          // Navigate back to products list after successful update
+          this.router.navigate(['/products']);
         } else {
-          this.status = "Failed to update product. Please try again.";
+          this.errorMessage = 'Update failed. Please try again.';
         }
       },
-      error => {
-        this.errorMsg = error;
-        this.showDiv = true;
-        this.status = "An error occurred while updating the product.";
-      },
-      () => console.log("Update product method executed successfully")
-    );
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = 'An error occurred while updating the product. Please try again.';
+        console.error('Error updating product:', error);
+      }
+    });
   }
 }
