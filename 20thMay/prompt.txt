@@ -1,3 +1,7 @@
+The operation i have to do is deleting the product using .Net full stack and angular as the frontend.
+When i am trying to delete a product through swagger, it was not deleting. I tried to debug and i found that there is an exception coming from the repository.cs method. And the exception statement is "An error occurred while saving the entity changes. See the inner exception for details". From this What i thought is the foreign key exception. Take a look of the all related codes and give me what i need to change so that i can perform the deleting a product operation successfully.
+The below is the database i have.
+
 CREATE DATABASE Shop3D;
 GO
 
@@ -96,7 +100,7 @@ INSERT INTO Users (Email, PasswordHash, FirstName, LastName, PhoneNumber, Addres
 VALUES 
 ('admin@example.com', 'hashed_pw_1', 'Alice', 'Admin', '1234567890', '123 Admin St', 'New York', 'NY', '10001', 'USA', 2),
 ('manager@example.com', 'hashed_pw_2', 'Bob', 'Manager', '2345678901', '456 Manager Ave', 'Los Angeles', 'CA', '90001', 'USA', 2),
-('editor@example.com', 'hashed_pw_3', 'Charlie', 'Editor', '3456789012', '789 Editor Blvd', 'Chicago', 'IL', '60601', 'USA', 3),
+('editor@example.com', 'hashed_pw_3', 'Charlie', 'Editor', '3456789012', '789 Editor Blvd', 'Chicago', 'IL', '60601', 'USA', 2),
 ('viewer@example.com', 'hashed_pw_4', 'Diana', 'Viewer', '4567890123', '101 Viewer Rd', 'Houston', 'TX', '77001', 'USA', 2),
 ('support@example.com', 'hashed_pw_5', 'Ethan', 'Support', '5678901234', '202 Support Ln', 'Phoenix', 'AZ', '85001', 'USA', 2),
 ('hr@example.com', 'hashed_pw_6', 'Fiona', 'HR', '6789012345', '303 HR Pkwy', 'Philadelphia', 'PA', '19101', 'USA', 3);
@@ -518,7 +522,7 @@ GO
 
 
 
-
+The below is the repository.cs method in DAL layer:
 
         #region DeleteProduct - Deletes a product
         public bool DeleteProduct(int productId)
@@ -547,6 +551,7 @@ GO
 
 
 
+The below the Web API method present in the productController.cs:
 
         [HttpDelete]
         public JsonResult DeleteProduct(int id)
@@ -564,8 +569,6 @@ GO
         }
 
 
-
-
-
+The below is the url present inside the swagger. It is always returning false which means product not deleted maybe because of the exception coming in the method inside the repository.cs class.
 
 https://localhost:7195/api/Product/DeleteProduct?id=1
