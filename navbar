@@ -1,7 +1,0 @@
-The below is the code for Navbar, When the user clicks on the shop3D element in the navbar or when he opens the application ie.., the home page a web page must be displayed which should have the below elements.
--There must be an attractive heading of Shop3D in the left corner.
--Below the heading or the shop3D name, there must be a description about the application. The application is an ECommerce website in which the furniture will be sold. The speciality of our project is the products are shown in 3D model in which we can rotate the product to view in every angle, zoom on the product. Based on this add the description about the furniture company or any other information which will be proffessional.
--At the right to the description there must be a suitable image which will be attractive. If there is any animation, it will be better.
--After all this on the bottom left, there must be a button called "Buy Products". When user clicks on that button, the page will be redirected to the products list page.
--Do everything using the angular. Give me the component.ts code, component.html code and component.css code.
--If possible give me the preview of the code.
