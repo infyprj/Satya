@@ -1,0 +1,206 @@
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { trigger, state, style, transition, animate, keyframes, query, stagger } from '@angular/animations';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(30px)' }),
+        animate('0.8s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('staggeredFadeIn', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(20px)' }),
+          stagger(200, [
+            animate('0.6s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ]),
+    trigger('floatingAnimation', [
+      state('floating', style({})),
+      transition('* => floating', [
+        animate('3s ease-in-out', keyframes([
+          style({ transform: 'translateY(0px) rotate(0deg)', offset: 0 }),
+          style({ transform: 'translateY(-10px) rotate(2deg)', offset: 0.5 }),
+          style({ transform: 'translateY(0px) rotate(0deg)', offset: 1 })
+        ]))
+      ])
+    ]),
+    trigger('scaleIn', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.8)' }),
+        animate('0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)', 
+          style({ opacity: 1, transform: 'scale(1)' }))
+      ])
+    ])
+  ]
+})
+export class HomeComponent implements OnInit, OnDestroy {
+  @ViewChild('heroVideo', { static: false }) heroVideo!: ElementRef<HTMLVideoElement>;
+  
+  currentTestimonial = 0;
+  isLoaded = false;
+  mousePosition = { x: 0, y: 0 };
+  
+  featuredProducts = [
+    {
+      id: 1,
+      name: 'Premium Headphones',
+      price: 299.99,
+      image: 'assets/images/headphones.jpg',
+      model3D: 'assets/models/headphones.glb',
+      category: 'Electronics',
+      rating: 4.8
+    },
+    {
+      id: 2,
+      name: 'Smart Watch Pro',
+      price: 449.99,
+      image: 'assets/images/smartwatch.jpg',
+      model3D: 'assets/models/smartwatch.glb',
+      category: 'Wearables',
+      rating: 4.9
+    },
+    {
+      id: 3,
+      name: 'Wireless Speaker',
+      price: 199.99,
+      image: 'assets/images/speaker.jpg',
+      model3D: 'assets/models/speaker.glb',
+      category: 'Audio',
+      rating: 4.7
+    },
+    {
+      id: 4,
+      name: 'Gaming Mouse Elite',
+      price: 89.99,
+      image: 'assets/images/mouse.jpg',
+      model3D: 'assets/models/mouse.glb',
+      category: 'Gaming',
+      rating: 4.6
+    }
+  ];
+
+  testimonials = [
+    {
+      name: 'Sarah Johnson',
+      role: 'Tech Enthusiast',
+      content: 'The 3D visualization completely changed how I shop online. I can see every detail before purchasing!',
+      avatar: 'assets/images/avatar1.jpg',
+      rating: 5
+    },
+    {
+      name: 'Mike Chen',
+      role: 'Online Shopper',
+      content: 'Incredible experience! Being able to rotate and examine products in 3D gives me confidence in my purchases.',
+      avatar: 'assets/images/avatar2.jpg',
+      rating: 5
+    },
+    {
+      name: 'Emily Rodriguez',
+      role: 'Design Professional',
+      content: 'This platform sets a new standard for e-commerce. The attention to detail in the 3D models is outstanding.',
+      avatar: 'assets/images/avatar3.jpg',
+      rating: 5
+    }
+  ];
+
+  features = [
+    {
+      icon: '🔄',
+      title: '360° Product View',
+      description: 'Rotate and examine products from every angle with smooth, interactive controls.'
+    },
+    {
+      icon: '🔍',
+      title: 'Zoom & Inspect',
+      description: 'Get up close with high-resolution details and textures for informed decisions.'
+    },
+    {
+      icon: '⚡',
+      title: 'Real-time Rendering',
+      description: 'Experience lightning-fast 3D visualization powered by cutting-edge WebGL technology.'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Optimized',
+      description: 'Enjoy the same immersive experience across all devices with responsive design.'
+    }
+  ];
+
+  stats = [
+    { value: '10K+', label: 'Products in 3D', suffix: '' },
+    { value: '99.9', label: 'Uptime', suffix: '%' },
+    { value: '50K+', label: 'Happy Customers', suffix: '' },
+    { value: '4.9', label: 'Average Rating', suffix: '/5' }
+  ];
+
+  ngOnInit() {
+    setTimeout(() => {
+      this.isLoaded = true;
+    }, 100);
+
+    // Auto-rotate testimonials
+    setInterval(() => {
+      this.nextTestimonial();
+    }, 5000);
+
+    // Parallax mouse effect
+    document.addEventListener('mousemove', (e) => {
+      this.mousePosition.x = (e.clientX / window.innerWidth) * 100;
+      this.mousePosition.y = (e.clientY / window.innerHeight) * 100;
+    });
+  }
+
+  ngOnDestroy() {
+    document.removeEventListener('mousemove', () => {});
+  }
+
+  nextTestimonial() {
+    this.currentTestimonial = (this.currentTestimonial + 1) % this.testimonials.length;
+  }
+
+  prevTestimonial() {
+    this.currentTestimonial = this.currentTestimonial === 0 
+      ? this.testimonials.length - 1 
+      : this.currentTestimonial - 1;
+  }
+
+  scrollToSection(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  onProductHover(event: MouseEvent, product: any) {
+    const card = event.currentTarget as HTMLElement;
+    const rect = card.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    
+    const rotateX = (y - centerY) / 10;
+    const rotateY = (centerX - x) / 10;
+    
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+  }
+
+  onProductLeave(event: MouseEvent) {
+    const card = event.currentTarget as HTMLElement;
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+  }
+
+  exploreProduct(productId: number) {
+    // Navigate to product detail page with 3D viewer
+    console.log(`Exploring product ${productId} in 3D`);
+  }
+    }
