@@ -1,0 +1,209 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-background">
+    <div class="hero-gradient"></div>
+    <div class="floating-elements">
+      <div class="floating-cube" [@floatingAnimation]="'floating'"></div>
+      <div class="floating-sphere" [@floatingAnimation]="'floating'"></div>
+      <div class="floating-pyramid" [@floatingAnimation]="'floating'"></div>
+    </div>
+  </div>
+  
+  <div class="hero-content" [@fadeInUp] *ngIf="isLoaded">
+    <h1 class="hero-title">
+      Experience Shopping in 
+      <span class="gradient-text">3D Reality</span>
+    </h1>
+    <p class="hero-subtitle">
+      Revolutionize your online shopping with interactive 3D product visualization. 
+      Rotate, zoom, and explore every detail before you buy.
+    </p>
+    <div class="hero-buttons">
+      <button class="btn btn-primary" (click)="scrollToSection('featured-products')">
+        <span class="btn-text">Explore Products</span>
+        <div class="btn-shimmer"></div>
+      </button>
+      <button class="btn btn-secondary" (click)="scrollToSection('features')">
+        <span class="btn-text">Learn More</span>
+        <i class="icon-arrow-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="hero-visual" [@scaleIn] *ngIf="isLoaded">
+    <div class="product-showcase">
+      <div class="showcase-item active">
+        <img src="assets/images/hero-product.jpg" alt="3D Product Showcase" />
+        <div class="showcase-overlay">
+          <span class="view-3d-badge">View in 3D</span>
+        </div>
+      </div>
+    </div>
+    <div class="floating-ui-elements">
+      <div class="ui-card rotate-indicator">
+        <i class="icon-rotate"></i>
+        <span>Rotate 360°</span>
+      </div>
+      <div class="ui-card zoom-indicator">
+        <i class="icon-zoom"></i>
+        <span>Zoom & Inspect</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section" [@staggeredFadeIn]>
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item" *ngFor="let stat of stats">
+        <div class="stat-number">{{ stat.value }}<span class="stat-suffix">{{ stat.suffix }}</span></div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+  <div class="container">
+    <div class="section-header" [@fadeInUp]>
+      <h2 class="section-title">Why Choose 3D Shopping?</h2>
+      <p class="section-subtitle">
+        Experience the future of e-commerce with our cutting-edge 3D visualization technology
+      </p>
+    </div>
+    
+    <div class="features-grid" [@staggeredFadeIn]>
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3 class="feature-title">{{ feature.title }}</h3>
+        <p class="feature-description">{{ feature.description }}</p>
+        <div class="feature-glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section id="featured-products" class="products-section">
+  <div class="container">
+    <div class="section-header" [@fadeInUp]>
+      <h2 class="section-title">Featured Products</h2>
+      <p class="section-subtitle">
+        Discover our most popular items in stunning 3D detail
+      </p>
+    </div>
+    
+    <div class="products-grid" [@staggeredFadeIn]>
+      <div class="product-card" 
+           *ngFor="let product of featuredProducts"
+           (mouseenter)="onProductHover($event, product)"
+           (mouseleave)="onProductLeave($event)">
+        <div class="product-image-container">
+          <img [src]="product.image" [alt]="product.name" class="product-image" />
+          <div class="product-overlay">
+            <button class="view-3d-btn" (click)="exploreProduct(product.id)">
+              <i class="icon-3d"></i>
+              <span>View in 3D</span>
+            </button>
+          </div>
+          <div class="product-badge">{{ product.category }}</div>
+        </div>
+        
+        <div class="product-info">
+          <div class="product-rating">
+            <div class="stars">
+              <span class="star filled" *ngFor="let star of [1,2,3,4,5].slice(0, Math.floor(product.rating))">★</span>
+              <span class="star" *ngIf="product.rating % 1 !== 0">★</span>
+            </div>
+            <span class="rating-value">({{ product.rating }})</span>
+          </div>
+          <h3 class="product-name">{{ product.name }}</h3>
+          <div class="product-price">${{ product.price }}</div>
+        </div>
+        
+        <div class="product-glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header" [@fadeInUp]>
+      <h2 class="section-title">What Our Customers Say</h2>
+      <p class="section-subtitle">
+        Join thousands of satisfied customers who've transformed their shopping experience
+      </p>
+    </div>
+    
+    <div class="testimonials-container">
+      <div class="testimonial-slider">
+        <div class="testimonial-card active" 
+             *ngFor="let testimonial of testimonials; let i = index"
+             [class.active]="i === currentTestimonial">
+          <div class="testimonial-content">
+            <div class="quote-icon">"</div>
+            <p class="testimonial-text">{{ testimonial.content }}</p>
+            <div class="testimonial-rating">
+              <span class="star" *ngFor="let star of [1,2,3,4,5]">★</span>
+            </div>
+          </div>
+          <div class="testimonial-author">
+            <img [src]="testimonial.avatar" [alt]="testimonial.name" class="author-avatar" />
+            <div class="author-info">
+              <div class="author-name">{{ testimonial.name }}</div>
+              <div class="author-role">{{ testimonial.role }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="testimonial-controls">
+        <button class="control-btn prev" (click)="prevTestimonial()">
+          <i class="icon-chevron-left"></i>
+        </button>
+        <div class="testimonial-dots">
+          <button class="dot" 
+                  *ngFor="let testimonial of testimonials; let i = index"
+                  [class.active]="i === currentTestimonial"
+                  (click)="currentTestimonial = i">
+          </button>
+        </div>
+        <button class="control-btn next" (click)="nextTestimonial()">
+          <i class="icon-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content" [@fadeInUp]>
+      <h2 class="cta-title">Ready to Start Your 3D Shopping Journey?</h2>
+      <p class="cta-subtitle">
+        Join the revolution and experience products like never before
+      </p>
+      <div class="cta-buttons">
+        <button class="btn btn-primary btn-large">
+          <span class="btn-text">Shop Now</span>
+          <div class="btn-shimmer"></div>
+        </button>
+        <button class="btn btn-outline btn-large">
+          <span class="btn-text">Try Demo</span>
+        </button>
+      </div>
+    </div>
+    <div class="cta-visual">
+      <div class="floating-products">
+        <div class="floating-product" *ngFor="let product of featuredProducts.slice(0, 3)">
+          <img [src]="product.image" [alt]="product.name" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
