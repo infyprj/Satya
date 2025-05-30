@@ -1,0 +1,330 @@
+import { ArrowRight, Eye, RotateCcw, ZoomIn, Sofa, Bed, ChefHat, Star, ShoppingCart, Play } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">3D</span>
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Shop3D
+              </h1>
+            </div>
+            <nav className="hidden md:flex space-x-8">
+              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">
+                Home
+              </a>
+              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">
+                About
+              </a>
+              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">
+                Contact
+              </a>
+            </nav>
+            <Button variant="outline" size="sm">
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Cart
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden py-20 lg:py-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                  Experience Furniture in
+                  <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    3D Reality
+                  </span>
+                </h2>
+                <p className="text-xl text-gray-600 leading-relaxed">
+                  Revolutionary 3D furniture shopping experience. View, rotate, and zoom every piece before you buy.
+                  Transform your space with confidence.
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg"
+                >
+                  Buy Products
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+                <Button variant="outline" size="lg" className="px-8 py-4 text-lg">
+                  <Play className="w-5 h-5 mr-2" />
+                  Watch Demo
+                </Button>
+              </div>
+
+              {/* Features */}
+              <div className="grid grid-cols-3 gap-6 pt-8">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <Eye className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">360° View</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <RotateCcw className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">Rotate</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <ZoomIn className="w-6 h-6 text-green-600" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">Zoom</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Image/3D Preview */}
+            <div className="relative">
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-3xl p-8 lg:p-12">
+                <div className="aspect-square bg-white rounded-2xl shadow-2xl flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
+                  <div className="relative z-10 text-center">
+                    <div className="w-32 h-32 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+                      <Sofa className="w-16 h-16 text-white" />
+                    </div>
+                    <p className="text-gray-600 font-medium">3D Furniture Preview</p>
+                    <p className="text-sm text-gray-500 mt-2">Interactive 3D Model</p>
+                  </div>
+
+                  {/* Floating elements */}
+                  <div className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg">
+                    <RotateCcw className="w-4 h-4 text-blue-600" />
+                  </div>
+                  <div className="absolute bottom-4 left-4 bg-white rounded-full p-2 shadow-lg">
+                    <ZoomIn className="w-4 h-4 text-purple-600" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-gray-900 mb-4">Shop by Category</h3>
+            <p className="text-xl text-gray-600">Explore our 3D furniture collection</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-lg">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <Sofa className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-2xl font-bold text-gray-900 mb-3">Living Room</h4>
+                <p className="text-gray-600 mb-6">Sofas, chairs, coffee tables and more</p>
+                <Button variant="outline" className="group-hover:bg-blue-50 group-hover:border-blue-200">
+                  View Collection
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-lg">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <Bed className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-2xl font-bold text-gray-900 mb-3">Bedroom</h4>
+                <p className="text-gray-600 mb-6">Beds, dressers, nightstands and more</p>
+                <Button variant="outline" className="group-hover:bg-purple-50 group-hover:border-purple-200">
+                  View Collection
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-0 shadow-lg">
+              <CardContent className="p-8 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <ChefHat className="w-10 h-10 text-white" />
+                </div>
+                <h4 className="text-2xl font-bold text-gray-900 mb-3">Kitchen</h4>
+                <p className="text-gray-600 mb-6">Dining tables, chairs, storage and more</p>
+                <Button variant="outline" className="group-hover:bg-green-50 group-hover:border-green-200">
+                  View Collection
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h3 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Shop3D?</h3>
+            <p className="text-xl text-gray-600">The future of furniture shopping is here</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Eye className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-bold text-gray-900 mb-3">3D Visualization</h4>
+              <p className="text-gray-600">See every detail in stunning 3D before you buy</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <RotateCcw className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-bold text-gray-900 mb-3">360° Rotation</h4>
+              <p className="text-gray-600">Rotate and examine from every angle</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <ZoomIn className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-bold text-gray-900 mb-3">Zoom Details</h4>
+              <p className="text-gray-600">Zoom in to see materials and textures</p>
+            </div>
+
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Star className="w-8 h-8 text-white" />
+              </div>
+              <h4 className="text-xl font-bold text-gray-900 mb-3">Premium Quality</h4>
+              <p className="text-gray-600">Curated collection of high-quality furniture</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h3 className="text-4xl lg:text-5xl font-bold text-white mb-6">Ready to Transform Your Space?</h3>
+          <p className="text-xl text-blue-100 mb-8">
+            Experience the future of furniture shopping with our revolutionary 3D technology
+          </p>
+          <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-50 px-8 py-4 text-lg font-semibold">
+            Buy Products Now
+            <ArrowRight className="w-5 h-5 ml-2" />
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">3D</span>
+                </div>
+                <h4 className="text-xl font-bold">Shop3D</h4>
+              </div>
+              <p className="text-gray-400">Revolutionary 3D furniture shopping experience</p>
+            </div>
+
+            <div>
+              <h5 className="font-semibold mb-4">Categories</h5>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Living Room
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Bedroom
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Kitchen
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Office
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="font-semibold mb-4">Support</h5>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Help Center
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Shipping Info
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Returns
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Contact Us
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h5 className="font-semibold mb-4">Company</h5>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-white transition-colors">
+                    Terms of Service
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Shop3D. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
